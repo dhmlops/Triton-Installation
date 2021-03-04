@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # offline installation
+
 echo offline installation started ....
 read -p "script directory: ${PWD}   Press any key to continue ..."
 
@@ -32,7 +33,8 @@ read -p "Proceed with client libraries installation.  Press Enter to continue ..
 
 echo install client dependencies ...
 # install triton client libraries
-pip3 install ${PWD}/tritonclient2.6.0/nvidia-pyindex-1.0.6.tar.gz
+python3 -m pip install --upgrade ${PWD}/python_packages/grpcio_tools-1.36.1-cp39-cp39-manylinux2014_x86_64.whl
+python3 -m pip install --upgrade ${PWD}/python_packages/wheel-0.36.2-py2.py3-none-any.whl
 python3 -m pip install --upgrade ${PWD}/tritonclient2.6.0/tritonclient-2.6.0-py3-none-any.whl
 
 # install other client dependencies
