@@ -12,8 +12,19 @@ https://github.com/triton-inference-server/server/blob/master/docs/quickstart.md
 docker load --input docker_image/triton-20.12.tar
 ```
 
+Note: The docker image is not uploaded to Github due to its size. To setup on your own machine, you can download the image.
+```bash
+docker pull nvcr.io/nvidia/tritonserver:20.12-py3
+```
+
 ### 3. Install Nvidia-Docker2
 This is required for docker to use GPU. 
+Check if already installed. 
+```bash
+nvidia-docker version
+```
+Otherwise, install using the scripts below.
+
 ```bash
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
    && curl -s -L nvidia-docker2/gpgkey | sudo apt-key add - \
@@ -93,6 +104,7 @@ curl -X POST http://<triton_ip>:<triton_port>/v2/mnist_tf_savedmodel/versions/1 
 ## References
 1. https://github.com/triton-inference-server/server/blob/master/docs/quickstart.md#install-triton-docker-image
 2. https://github.com/kubeflow/kfserving/blob/master/docs/predict-api/v2/required_api.md
+3. https://stackoverflow.com/questions/41802816/how-to-check-nvidia-docker-version
 
 
 
