@@ -28,17 +28,27 @@ sudo systemctl restart docker
 read -p "Docker restarted. Press Enter to continue ..."
 
 
-read -p "Proceed with client libraries installation.  Press Enter to continue ..."
+read -p "Proceed with client libraries installation if need be.  Press Enter to continue ..."
 
 
-echo install client dependencies ...
+#echo install client dependencies ...
 # install triton client libraries
-python3 -m pip install --upgrade ${PWD}/python_packages/grpcio_tools-1.36.1-cp39-cp39-manylinux2014_x86_64.whl
-python3 -m pip install --upgrade ${PWD}/python_packages/wheel-0.36.2-py2.py3-none-any.whl
-python3 -m pip install --upgrade ${PWD}/tritonclient2.6.0/tritonclient-2.6.0-py3-none-any.whl
+#python3 -m pip install --upgrade ${PWD}/python_packages/pip-21.0.1-py3-none-any.whl
+#python3 -m pip install --upgrade ${PWD}/python_packages/setuptools-54.1.1-py3-none-any.whl
+#python3 -m pip install --upgrade ${PWD}/python_packages/nvidia-pyindex-1.0.6.tar.gz
+
+#python3 -m pip install --upgrade python_packages/python_rapidjson-1.0-cp36-cp36m-manylinux2010_x86_64.whl
+#python3 -m pip install --upgrade python_packages/certifi-2020.12.5-py2.py3-none-any.whl
+#python3 -m pip install --upgrade python_packages/zope.interface-5.2.0-cp36-cp36m-manylinux2010_x86_64.whl
+#python3 -m pip install --upgrade python_packages/zope.event-4.5.0-py2.py3-none-any.whl
+#python3 -m pip install --upgrade python_packages/greenlet-1.0.0-cp36-cp36m-manylinux2010_x86_64.whl
+#python3 -m pip install --upgrade python_packages/protobuf-3.15.5-cp36-cp36m-manylinux1_x86_64.whl
+#python3 -m pip install --upgrade python_packages/grpcio-1.36.1-cp36-cp36m-manylinux2014_x86_64.whl
+#python3 -m pip install --upgrade python_packages/gevent-21.1.2-cp36-cp36m-manylinux2010_x86_64.whl
+#python3 -m pip install --upgrade python_packages/geventhttpclient-1.4.4-cp36-cp36m-manylinux2010_x86_64.whl
+#python3 -m pip install --upgrade python_packages/tritonclient-2.6.0-py3-none-any.whl
 
 # install other client dependencies
-python3 -m pip install --upgrade ${PWD}/python_packages/Pillow-8.1.1-cp39-cp39-manylinux1_x86_64.whl
+#python3 -m pip install --upgrade ${PWD}/python_packages/Pillow-8.1.1-cp39-cp39-manylinux1_x86_64.whl
 
-
-read -p "Press Enter to end the installation!! Start the triton docker container after this installation."
+#read -p "Press Enter to end the installation!! Start the triton docker container after this installation."
