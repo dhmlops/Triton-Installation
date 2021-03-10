@@ -23,6 +23,16 @@ Check if already installed.
 ```bash
 nvidia-docker version
 ```
+You should see this if Nvidia-Docker2 is installed. 
+```bash
+NVIDIA Docker: 2.5.0
+
+Client:
+   <some info like version, built, etc.....>
+
+Server:
+   <some info .....>
+```
 Otherwise, install using the scripts below.
 
 ```bash
@@ -42,7 +52,7 @@ sudo apt install nvidia-docker2/$distribution/amd64/nvidia-docker2_2.5.0-1_all.d
 ```bash
 # Using S3 storage
 # --gpus=1 flag indicates that 1 system GPU should be made available to Triton for inferencing.
-docker run --gpus=<how_many_gpus> --rm --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 -p<http_port>:8000 -p<grpc_port>:8001 -p<metrics_port>:8002 nvcr.io/nvidia/tritonserver:20.12-py3 tritonserver -e AWS_ACCESS_KEY_ID=<accesskey> -e AWS_SECURE_ACCESS_KEY=<password> --model-repository=s3://<s3 ip>:<s3 port>/<bucket_for_model>
+docker run --gpus=<how_many_gpus> --rm --shm-size=1g --ulimit memlock=-1 -p<http_port>:8000 -p<grpc_port>:8001 -p<metrics_port>:8002 -e AWS_ACCESS_KEY_ID=<access_key> -e AWS_SECRET_ACCESS_KEY=<password> --ulimit stack=67108864 nvcr.io/nvidia/tritonserver:20.12-py3 tritonserver --model-repository=s3://<s3 ip>:<s3 port>/<bucket_for_model>
 ```
 
 ```bash
@@ -56,7 +66,7 @@ You should see your model with its version and status 'READY' after running the 
 | Model                | Version | Status |
 +----------------------+---------+--------+
 | <model_name>         | <v>     | READY  |
-| ..                   | .       | ..     |
+| mnist_tf_savedmodel  | 1       | READY  |
 | ..                   | .       | ..     |
 +----------------------+---------+--------+
 ```
@@ -84,14 +94,17 @@ https://github.com/kubeflow/kfserving/blob/master/docs/predict-api/v2/required_a
 # GET v2/models/${MODEL_NAME}/versions/${MODEL_VERSION}/ready
 # if http 200 returns, means model is OK. 
 # E.g. curl -X GET http://0.0.0.0:8000/v2/health/ready
-curl -X GET http://<triton_ip>:<triton_port>/v2/models/mnist_tf_savedmodel/versions/1/ready
+
+curl -X GET http://<triton_ip>:<http_port>/v2/models/mnist_tf_savedmodel/versions/1/ready
 ```
 
 ### Get model metadata
 ```bash
 # GET v2/models/${MODEL_NAME}/versions/${MODEL_VERSION}
 # Should get a json of model's metadata which is what are defined in model's config.pbtxt in S3. 
-curl -X GET http://<triton_ip>:<triton_port>/v2/models/mnist_tf_savedmodel/versions/1
+# {"name":"mnist_tf_savedmodel","versions":["1"],"platform":"tensorflow_savedmodel","inputs":[{"name":"flatten_1_input","datatype":"FP32","shape":[-1,28,28,1]}],"outputs":[{"name":"dense_3","datatype":"FP32","shape":[-1,10]}]}
+
+curl -X GET http://<triton_ip>:<http_port>/v2/models/mnist_tf_savedmodel/versions/1
 ```
 
 ### Do model inference
