@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+  name: triton-service
+  namespace: triton
+spec:
+  selector:
+    app: triton-server
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    name: rest
+    port: 8000
+    targetPort: 8000
+  - protocol: TCP
+    name: grpc
+    port: 8001
+    targetPort: 8001
+  - protocol: TCP
+    name: metrics
+    port: 8002
+    targetPort: 8002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: triton-server
+  name: apiserver
+  namespace: triton
+spec:
+  selector:
+    matchLabels:
+      app: triton-server
+  minReadySeconds: 20
+  progressDeadlineSeconds: 30
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: triton-server
+    spec:
+      containers:
+      - image: nvcr.io/nvidia/tritonserver:21.03-py3
+        imagePullPolicy: Always
+        name: apiserver
+        resources:
+          requests:
+            memory: "1G"
+            cpu: "2"
+          limits:
+            nvidia.com/gpu: 0
+            memory: "10G"
+            cpu: "10"
+        args:
+        - tritonserver
+        - '--model-repository=s3://192.168.56.101:9000/triton-models'
+        - '--log-verbose=1'
+        env:
+        - name: AWS_ACCESS_KEY_ID
+          value: "admin"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "password"
+
+      restartPolicy: Always
+
