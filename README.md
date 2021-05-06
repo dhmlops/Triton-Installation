@@ -118,9 +118,12 @@ Refer to RESTFUL examples in https://github.com/dhmlops/usage-examples/tree/main
 
 # Kubernetes Installation
 1. Do above step 1 to 4 if not done. 
-2. Update the ports number in yaml files accordingly.
-3. Update the s3 ip, port number, bucket name and credential accordingly. 
-4. Kubectl apply the yaml files to create a namespace, service to expose triton and deployment to manage the triton pods. 
+2. Download the yaml files and scripts https://github.com/dhmlops/Triton-Installation/tree/main/k8s
+3. Update the ports number in yaml files accordingly.
+4. Update the s3 ip, port number, bucket name and credential accordingly. 
+5. Update the path to triton docker image. 
+6. Update the resources intended to provision for the k8s pods. 
+7. Kubectl apply the yaml files to create a namespace, service to expose triton and deployment to manage the triton pods. 
 ```bash
 # the script will apply both the yaml files
 ./install.sh
