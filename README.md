@@ -108,11 +108,30 @@ curl -X GET http://<triton_ip>:<http_port>/v2/models/mnist_tf_savedmodel/version
 ```
 
 ### Do model inference
-***** WIP ***** to get it working. Pending understanding on how to define the data field in the http request body. 
 ```bash
 # POST v2/models/${MODEL_NAME}[/versions/${MODEL_VERSION}]/infer
 curl -X POST http://<triton_ip>:<triton_port>/v2/mnist_tf_savedmodel/versions/1 -<add http body>
+
+Refer to RESTFUL examples in https://github.com/dhmlops/usage-examples/tree/main/triton/client_REST
 ```
+
+
+# Kubernetes Installation
+1. Do above step 1 to 4 if not done. 
+2. Update the ports number in yaml files accordingly.
+3. Update the s3 ip, port number, bucket name and credential accordingly. 
+4. Kubectl apply the yaml files to create a namespace, service to expose triton and deployment to manage the triton pods. 
+```bash
+# the script will apply both the yaml files
+./install.sh
+```
+3. Obtain the external ip for the service by doing this command:
+```bash
+# kubectl get services -n triton for our uploaded example
+kubectl get services -n <namespace of triton>
+```
+4. Test the setup using above step 6 and further testing. 
+
 
 ## References
 1. https://github.com/triton-inference-server/server/blob/master/docs/quickstart.md#install-triton-docker-image
