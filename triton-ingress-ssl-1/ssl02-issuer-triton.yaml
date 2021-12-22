@@ -1,0 +1,8 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: ca-issuer-triton-1
+  namespace: triton-1
+spec:
+  ca:
+    secretName: ca-key-pair-triton-1
