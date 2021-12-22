@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+  name: triton-service
+  namespace: triton
+spec:
+  selector:
+    app: triton-server
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    name: rest
+    port: 8000
+    targetPort: 8000
+  - protocol: TCP
+    name: grpc
+    port: 8001
+    targetPort: 8001
+  - protocol: TCP
+    name: metrics
+    port: 8002
+    targetPort: 8002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: triton-server
+  name: apiserver
+  namespace: triton
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: triton-server
+  minReadySeconds: 5
+  progressDeadlineSeconds: 30
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: triton-server
+    spec:
+      containers:
+      - name: apiserver
+        image: nvcr.io/nvidia/tritonserver:21.06-py3
+        imagePullPolicy: IfNotPresent        
+        resources:
+          requests:
+            memory: "2G"
+            cpu: "2"
+          limits:
+            nvidia.com/gpu: 0
+            memory: "4G"
+            cpu: "4"
+        args:
+        - tritonserver
+        - '--model-repository=s3://192.168.1.110:9000/triton-models'
+        - '--log-verbose=1'
+        - '--model-control-mode=poll'
+        - '--repository-poll-secs=5'
+        - '--strict-model-config=true'
+        - '--exit-on-error=false'
+        env:
+        - name: AWS_ACCESS_KEY_ID
+          value: "admin"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "password"
+        - name: AWS_DEFAULT_REGION
+          value: us-east-1
+        ports:
+          - containerPort: 8000
+            name: http
+          - containerPort: 8001
+            name: grpc
+          - containerPort: 8002
+            name: metrics
+        # livenessProbe:
+        #   httpGet:
+        #     path: /v2/health/live
+        #     port: http
+        # readinessProbe:
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 5
+        #   httpGet:
+        #     path: /v2/health/ready
+        #     port: http        
+
+      restartPolicy: Always
