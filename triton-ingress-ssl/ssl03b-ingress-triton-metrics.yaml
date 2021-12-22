@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: triton-ingress-metrics
+  namespace: triton
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    # using nginx ingress controller
+    kubernetes.io/ingress.class: nginx
+    # tells which issuer to use to issue cert. 
+    cert-manager.io/issuer: ca-issuer-triton
+
+    # mirror to this uri; this is triton-2
+    nginx.ingress.kubernetes.io/mirror-target: http://10.101.64.44:9002$request_uri
+    # nginx.ingress.kubernetes.io/mirror-target: api.triton.mirror.home.ai$request_uri
+    # request body for mirror
+    nginx.ingress.kubernetes.io/mirror-request-body: "on"
+spec:
+  # defines how incoming requests should be mapped to backend svs, based on requested hostname
+  # note that the host name should be included in DNS to resolve to ingress ip. 
+  rules:
+  - host: metrics.triton.home.ai
+    http:
+      paths:
+      - backend:
+          service:
+            name: triton-service
+            port: 
+              number: 8002
+        path: /
+        pathType: Prefix
+  # creates cert. for hosts.
+  tls:
+  - hosts:
+    - metrics.triton.home.ai
+    # ingress will issue cert to client if they access this host and store issued cert. here
+    secretName: ingress-cert-triton
